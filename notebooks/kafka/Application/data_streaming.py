@@ -94,11 +94,6 @@ udf_value_json = F.udf(value_json, T.StringType())
 def get_table_dataframe(spark, table):
     df_kafka = spark.sql(f'select CAST(value AS STRING), topic, timestamp from {table}')
     
-    # notice that value contains escaped characters e.g. \" 
-    # "{\"ASIN\": \"1250150183\", \"GROUP\": \"book\", \"FORMAT\": \"hardcover\", 
-    # \"TITLE\": \"The Swamp: Washington's Murky Pool of Corruption and Cronyism and How Trump Can Drain It\", 
-    # \"AUTHOR\": \"Eric Bolling\", \"PUBLISHER\": \"St. Martin's Press\"}" 
-     
     df_kafka = (df_kafka
                 .withColumn('jsonvalue', udf_value_json(F.col('value')))
                 .withColumn('ID', F.get_json_object(F.col('jsonvalue'), '$.ID'))
@@ -124,6 +119,8 @@ def get_table_dataframe(spark, table):
                 .withColumn('Latitude', F.get_json_object(F.col('jsonvalue'), '$.Latitude'))
                 .withColumn('Longitude', F.get_json_object(F.col('jsonvalue'), '$.Longitude'))
                 .withColumn('Location', F.get_json_object(F.col('jsonvalue'), '$.Location'))
+                .withColumn('prediction',  F.get_json_object(F.col('jsonvalue'), '$.prediction').cast('int'))
+                .withColumn('probability', F.get_json_object(F.col('jsonvalue'), '$.probability').cast('double'))
     )
 
     return df_kafka

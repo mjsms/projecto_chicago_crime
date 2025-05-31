@@ -19,8 +19,8 @@ from kafka import KafkaProducer
 # args: could have been set while calling the code
 
 topic = 'chicago-crime'
-inputfile = '../Datasets/chicago_crime.csv'
-chunksize = 10000  # number of rows
+inputfile = '../../dados/chicago_crime.csv'
+chunksize = 1000  # number of rows
 sleeptime = 0.3
 
 #=======================================================
@@ -61,6 +61,7 @@ with open(inputfile, mode='r') as file:
     # Iterate through the lines in the CSV file
     for row in csv_reader:
         # Each row is a dictionary
+        row = {k.replace(' ', '_'): v for k, v in row.items()}
         json_data = json.dumps(row, default=datetime_converter)
         # json_data = row.to_dict(orient='records')
 

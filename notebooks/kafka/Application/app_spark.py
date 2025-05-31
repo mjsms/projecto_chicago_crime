@@ -6,7 +6,7 @@ from data_streaming import ( spark_initialize, data_stream_spark,
 
 brokers = 'localhost:9092'
 topic = 'chicago-crime'
-table = 'chicagocrimestable'
+table = 'chicagocrimetable'
 
 # Showing results of data stream processing
 def show_spark_results(spark, table):

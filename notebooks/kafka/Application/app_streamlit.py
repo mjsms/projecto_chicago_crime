@@ -23,8 +23,8 @@ def results():
     placeholder = st.empty()
     sleeptime = 0.8
     maxiterations = 30
-    top_authors = 20
-    top_publishers = 20
+    top_location = 20
+    top_district = 20
 
     # Iterative update
     for i in range(maxiterations):
@@ -34,30 +34,30 @@ def results():
         count = df.count()
         status_text.warning(f'Processing...  Iteration {i} with in-between delay of {sleeptime} second(s). Messages/records processed so far: {count}.')
         cols1 = ['Location_Description'] 
-        df_author = df.groupBy(cols1).count().orderBy('count', ascending=False).limit(top_authors).toPandas()
-        cols2 = ['District']
-        df_publisher = df.groupBy(cols2).count().orderBy('count', ascending=False).limit(top_publishers).toPandas()
-        print(df_publisher)
+        df_location = df.groupBy(cols1).count().orderBy('count', ascending=False).limit(top_location).toPandas()
+        cols2 = ['Description']
+        df_description = df.groupBy(cols2).count().orderBy('count', ascending=False).limit(top_district).toPandas()
+
 
         with placeholder.container():
 
             # Each chart in one column, so two columns required
             fig_col1, fig_col2 = st.columns(2)
             with fig_col1:
-                st.markdown('### Author')
-                st.markdown(f'**Counting of books by author - Top {top_authors}**')
-                st.bar_chart(data=df_author, y='count', x=cols1[0], horizontal=True)
+                st.markdown('### Location')
+                st.markdown(f'**Counting of crimes by location - Top {top_location}**')
+                st.bar_chart(data=df_location, y='count', x=cols1[0], horizontal=True)
             with fig_col2:
-                st.markdown('### Publisher')
-                st.markdown(f'**Counting of books by publisher - Top {top_publishers}**')
-                st.bar_chart(data=df_publisher, y='count', x=cols2[0], horizontal=True)
+                st.markdown('### Description')
+                st.markdown(f'**Counting of crimes by description - Top {top_district}**')
+                st.bar_chart(data=df_description, y='count', x=cols2[0], horizontal=True)
 
             # Show the related dataframes
             st.markdown('### Detailed tables view')
-            st.markdown('**Author**')
-            st.dataframe(df_author)
-            st.markdown('**Publisher**')
-            st.dataframe(df_publisher)
+            st.markdown('**Location**')
+            st.dataframe(df_location)
+            st.markdown('**Description**')
+            st.dataframe(df_description)
     
         progress_bar.progress(i)
   
@@ -84,20 +84,20 @@ def main():
     
     # Page config
     st.set_page_config(
-        page_title = 'Books data streaming',
+        page_title = 'Crimes data streaming',
         initial_sidebar_state = 'expanded',
         layout = 'wide'
     )
     # App title
-    st.title('Books data streaming')
+    st.title('Crimes data streaming')
     st.divider()
     with st.sidebar:
         st.empty()
         st.header('Algoritmos para Big Data')
 
     brokers = 'localhost:9092'
-    topic = 'chicago-crime'
-    table = 'chicagocrimestable'
+    topic = 'crime-predictions'
+    table = 'chicagocrimetable'
 
     # As code is running everytime the user interacts with, 
     # we must make sure that the spark side only starts once
