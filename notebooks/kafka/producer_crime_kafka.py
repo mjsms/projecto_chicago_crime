@@ -25,7 +25,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--csv", required=True, help="CSV ou Parquet de origem")
     ap.add_argument("--brokers", default="localhost:9092")
-    ap.add_argument("--topic", required=True)
+    ap.add_argument("--topic", default="crime")
     ap.add_argument("--sleep", type=float, default=0.05,
                     help="Delay entre mensagens (s)")
     ap.add_argument("--limit", type=int, default=None,
